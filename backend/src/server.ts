@@ -1,8 +1,8 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import { conectarDB } from "./config/database.js";
-import tourRoutes from "./routes/tourRoutes.js";
+import { conectarDB } from "./config/database";
+import tourRoutes from "./routes/tourRoutes";
 
 dotenv.config();
 

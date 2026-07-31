@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import Tour from '../models/Tour.js';
+import Tour from '../models/Tour';
 
 // Obtener todos los tours
 export const getTours = async (req: Request, res: Response) => {
