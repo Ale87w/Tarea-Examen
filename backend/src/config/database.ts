@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 export const conectarDB = async () => {
   try {
     const uri = process.env.MONGO_URI;
+    console.log("Intentando conectar con URI:", uri);
 
     if (!uri) {
       throw new Error("La variable MONGO_URI no está definida en el .env");
