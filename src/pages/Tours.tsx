@@ -6,6 +6,7 @@ import type { Tour } from '../interfaces/Tour';
 const Tours: React.FC = () => {
   const [tours, setTours] = useState<Tour[]>([]);
   const [mostrarModal, setMostrarModal] = useState(false);
+  const [tourSeleccionado, setTourSeleccionado] = useState<Tour | null>(null);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -21,7 +22,14 @@ const Tours: React.FC = () => {
     }
   };
 
-  const borrarTour = async (id: string) => {
+  const abrirEditar = (tour: Tour) => {
+    setTourSeleccionado(tour);
+    setMostrarModal(true);
+  };
+
+  const borrarTour = async (id?: string) => {
+    if (!id) return;
+
     if (confirm('¿Estás seguro de eliminar este tour?')) {
       await eliminarTour(id);
       cargarTours();
@@ -70,7 +78,12 @@ const Tours: React.FC = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{tour.cupos}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     <div className="flex gap-2">
-                      <button className="bg-yellow-500 text-white px-3 py-1 rounded text-sm">Editar</button>
+                      <button
+                        onClick={() => abrirEditar(tour)}
+                        className="bg-yellow-500 text-white px-3 py-1 rounded text-sm hover:bg-yellow-600 transition"
+                      >
+                        Editar
+                      </button>
                       <button
                         onClick={() => borrarTour(tour._id)}
                         className="bg-red-600 text-white px-3 py-1 rounded text-sm"
@@ -91,8 +104,12 @@ const Tours: React.FC = () => {
       </div>
       {mostrarModal && (
         <TourModal
-          onClose={() => setMostrarModal(false)}
+          onClose={() => {
+            setMostrarModal(false);
+            setTourSeleccionado(null);
+          }}
           onRefresh={cargarTours}
+          tourParaEditar={tourSeleccionado}
         />
       )}
     </div>
