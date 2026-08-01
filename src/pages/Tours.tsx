@@ -22,7 +22,12 @@ const Tours: React.FC = () => {
     }
   };
 
-  const abrirEditar = (tour: Tour) => {
+  const abrirModalCrear = () => {
+    setTourSeleccionado(null);
+    setMostrarModal(true);
+  };
+
+  const abrirModalEditar = (tour: Tour) => {
     setTourSeleccionado(tour);
     setMostrarModal(true);
   };
@@ -48,7 +53,7 @@ const Tours: React.FC = () => {
       <div className="flex justify-between items-center mb-5">
         <h2 className="text-3xl font-bold">Administración de Tours</h2>
         <button 
-          onClick={() => setMostrarModal(true)}
+          onClick={abrirModalCrear}
           className="bg-blue-700 text-white px-5 py-2 rounded hover:bg-blue-800"
         >
           Nuevo Tour
@@ -79,7 +84,7 @@ const Tours: React.FC = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     <div className="flex gap-2">
                       <button
-                        onClick={() => abrirEditar(tour)}
+                        onClick={() => abrirModalEditar(tour)}
                         className="bg-yellow-500 text-white px-3 py-1 rounded text-sm hover:bg-yellow-600 transition"
                       >
                         Editar
@@ -104,10 +109,7 @@ const Tours: React.FC = () => {
       </div>
       {mostrarModal && (
         <TourModal
-          onClose={() => {
-            setMostrarModal(false);
-            setTourSeleccionado(null);
-          }}
+          onClose={() => setMostrarModal(false)}
           onRefresh={cargarTours}
           tourParaEditar={tourSeleccionado}
         />
