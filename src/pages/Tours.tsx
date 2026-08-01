@@ -1,9 +1,11 @@
+import TourModal from "../components/TourModal";
 import React, { useEffect, useState } from 'react';
 import { obtenerTours } from '../services/tourService';
 import type { Tour } from '../interfaces/Tour';
 
 const Tours: React.FC = () => {
   const [tours, setTours] = useState<Tour[]>([]);
+  const [mostrarModal, setMostrarModal] = useState(false);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -30,7 +32,10 @@ const Tours: React.FC = () => {
     <div className="p-6">
       <div className="flex justify-between items-center mb-5">
         <h2 className="text-3xl font-bold">Administración de Tours</h2>
-        <button className="bg-blue-700 text-white px-5 py-2 rounded hover:bg-blue-800">
+        <button 
+          onClick={() => setMostrarModal(true)}
+          className="bg-blue-700 text-white px-5 py-2 rounded hover:bg-blue-800"
+        >
           Nuevo Tour
         </button>
       </div>
@@ -65,6 +70,7 @@ const Tours: React.FC = () => {
           </tbody>
         </table>
       </div>
+      {mostrarModal && <TourModal />}
     </div>
   );
 };
