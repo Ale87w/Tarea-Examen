@@ -1,6 +1,6 @@
+import DashboardCards from "../components/DashboardCards";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
-import DashboardCards from "../components/DashboardCards";
 import Tours from "./Tours";
 
 const Dashboard = ()=> {
