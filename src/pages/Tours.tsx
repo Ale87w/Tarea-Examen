@@ -10,6 +10,7 @@ const Tours: React.FC = () => {
   const [busqueda, setBusqueda] = useState("");
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [ordenAsc, setOrdenAsc] = useState(true);
 
   const cargarTours = async () => {
     try {
@@ -50,19 +51,36 @@ const Tours: React.FC = () => {
     tour.nombre.toLowerCase().includes(busqueda.toLowerCase())
   );
 
+  const toursOrdenados = [...toursFiltrados].sort((a, b) => {
+    return ordenAsc ? a.precio - b.precio : b.precio - a.precio;
+  });
+
+  const toggleOrden = () => {
+    setOrdenAsc(!ordenAsc);
+  };
+
   if (cargando) return <div className="p-6">Cargando tours...</div>;
   if (error) return <div className="p-6 text-red-500">{error}</div>;
 
   return (
     <div className="p-6">
-      <div className="flex justify-between items-center mb-5">
+      <div className="flex flex-wrap justify-between items-center gap-3 mb-5">
         <h2 className="text-3xl font-bold">Administración de Tours</h2>
-        <button 
-          onClick={abrirModalCrear}
-          className="bg-blue-700 text-white px-5 py-2 rounded hover:bg-blue-800"
-        >
-          Nuevo Tour
-        </button>
+        <div className="flex items-center gap-2">
+          <button 
+            onClick={abrirModalCrear}
+            className="bg-blue-700 text-white px-5 py-2 rounded hover:bg-blue-800"
+          >
+            Nuevo Tour
+          </button>
+          <button
+            onClick={toggleOrden}
+            className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 flex items-center gap-2"
+          >
+            <span>Ordenar Precio</span>
+            <span>{ordenAsc ? '↑' : '↓'}</span>
+          </button>
+        </div>
       </div>
 
       <div className="mb-4">
@@ -88,8 +106,8 @@ const Tours: React.FC = () => {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {toursFiltrados.length > 0 ? (
-              toursFiltrados.map((tour) => (
+            {toursOrdenados.length > 0 ? (
+              toursOrdenados.map((tour) => (
                 <tr key={tour._id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{tour.nombre}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{tour.destino}</td>
