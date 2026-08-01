@@ -7,6 +7,7 @@ const Tours: React.FC = () => {
   const [tours, setTours] = useState<Tour[]>([]);
   const [mostrarModal, setMostrarModal] = useState(false);
   const [tourSeleccionado, setTourSeleccionado] = useState<Tour | null>(null);
+  const [busqueda, setBusqueda] = useState("");
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -45,6 +46,10 @@ const Tours: React.FC = () => {
     cargarTours();
   }, []);
 
+  const toursFiltrados = tours.filter((tour) =>
+    tour.nombre.toLowerCase().includes(busqueda.toLowerCase())
+  );
+
   if (cargando) return <div className="p-6">Cargando tours...</div>;
   if (error) return <div className="p-6 text-red-500">{error}</div>;
 
@@ -58,6 +63,16 @@ const Tours: React.FC = () => {
         >
           Nuevo Tour
         </button>
+      </div>
+
+      <div className="mb-4">
+        <input
+          type="text"
+          placeholder="Buscar por nombre..."
+          className="border w-full md:w-1/3 p-2 rounded"
+          value={busqueda}
+          onChange={(e) => setBusqueda(e.target.value)}
+        />
       </div>
       
       <div className="overflow-x-auto bg-white rounded-lg shadow-md">
@@ -73,8 +88,8 @@ const Tours: React.FC = () => {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {tours.length > 0 ? (
-              tours.map((tour) => (
+            {toursFiltrados.length > 0 ? (
+              toursFiltrados.map((tour) => (
                 <tr key={tour._id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{tour.nombre}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{tour.destino}</td>
@@ -101,7 +116,7 @@ const Tours: React.FC = () => {
               ))
             ) : (
               <tr>
-                <td colSpan={5} className="px-6 py-4 text-center text-gray-500">No hay tours registrados</td>
+                <td colSpan={6} className="px-6 py-4 text-center text-gray-500">No se encontraron tours</td>
               </tr>
             )}
           </tbody>
