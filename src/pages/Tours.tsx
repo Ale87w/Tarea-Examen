@@ -1,6 +1,6 @@
 import TourModal from "../components/TourModal";
 import React, { useEffect, useState } from 'react';
-import { obtenerTours } from '../services/tourService';
+import { eliminarTour, obtenerTours } from '../services/tourService';
 import type { Tour } from '../interfaces/Tour';
 
 const Tours: React.FC = () => {
@@ -9,19 +9,26 @@ const Tours: React.FC = () => {
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const cargarTours = async () => {
-      try {
-        const datos = await obtenerTours();
-        setTours(datos);
-        setError(null);
-      } catch (err) {
-        setError('No se pudieron cargar los tours. Asegúrate de que el backend esté corriendo.');
-      } finally {
-        setCargando(false);
-      }
-    };
+  const cargarTours = async () => {
+    try {
+      const datos = await obtenerTours();
+      setTours(datos);
+      setError(null);
+    } catch (err) {
+      setError('No se pudieron cargar los tours. Asegúrate de que el backend esté corriendo.');
+    } finally {
+      setCargando(false);
+    }
+  };
 
+  const borrarTour = async (id: string) => {
+    if (confirm('¿Estás seguro de eliminar este tour?')) {
+      await eliminarTour(id);
+      cargarTours();
+    }
+  };
+
+  useEffect(() => {
     cargarTours();
   }, []);
 
@@ -49,6 +56,7 @@ const Tours: React.FC = () => {
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Precio</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Duración</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cupos</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
@@ -60,6 +68,17 @@ const Tours: React.FC = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${tour.precio}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{tour.duracion}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{tour.cupos}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <div className="flex gap-2">
+                      <button className="bg-yellow-500 text-white px-3 py-1 rounded text-sm">Editar</button>
+                      <button
+                        onClick={() => borrarTour(tour._id)}
+                        className="bg-red-600 text-white px-3 py-1 rounded text-sm"
+                      >
+                        Eliminar
+                      </button>
+                    </div>
+                  </td>
                 </tr>
               ))
             ) : (
@@ -70,7 +89,12 @@ const Tours: React.FC = () => {
           </tbody>
         </table>
       </div>
-      {mostrarModal && <TourModal />}
+      {mostrarModal && (
+        <TourModal
+          onClose={() => setMostrarModal(false)}
+          onRefresh={cargarTours}
+        />
+      )}
     </div>
   );
 };
