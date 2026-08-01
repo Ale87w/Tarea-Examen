@@ -1,54 +1,70 @@
-import type {Tour} from "../interfaces/Tour"
+import React, { useEffect, useState } from 'react';
+import { obtenerTours } from '../services/tourService';
+import type { Tour } from '../interfaces/Tour';
 
-const Tours=()=>{
-    const tours: Tour[] = [
-    {
-        _id: "1",
-        nombre: "Tour a Chichen Itza",
-        destino: "Cancun",
-        precio: 2200,
-        duracion: "1 dia"
-    },
-    {
-        _id: "2",
-        nombre: "Tour a Tulum",
-        destino: "Tulum",
-        precio: 1500,
-        duracion: "Medio dia"
-    },
-    {
-        _id: "3",
-        nombre: "Tour a Playa del Carmen",
-        destino: "Playa del Carmen",
-        precio: 1200,
-        duracion: "1 dia"
-    }
-  ];
+const Tours: React.FC = () => {
+  const [tours, setTours] = useState<Tour[]>([]);
+  const [cargando, setCargando] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const cargarTours = async () => {
+      try {
+        const datos = await obtenerTours();
+        setTours(datos);
+        setError(null);
+      } catch (err) {
+        setError('No se pudieron cargar los tours. Asegúrate de que el backend esté corriendo.');
+      } finally {
+        setCargando(false);
+      }
+    };
+
+    cargarTours();
+  }, []);
+
+  if (cargando) return <div className="p-6">Cargando tours...</div>;
+  if (error) return <div className="p-6 text-red-500">{error}</div>;
 
   return (
-    <div>
-      <h2 className="text-3xl font-bold mb-6">Administración de Tours</h2>
-      <table className="w-full bg-white shadow rounded-lg overflow-hidden">
-        <thead className="bg-blue-700 text-white">
-          <tr>
-            <th className="text-left p-4">Tour</th>
-            <th className="text-left">Destino</th>
-            <th className="text-left">Precio</th>
-            <th className="text-left">Duración</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {tours.map((tour) => (
-            <tr key={tour._id} className="border-b hover:bg-gray-100">
-              <td className="p-4">{tour.nombre}</td>
-              <td>{tour.destino}</td>
-              <td>${tour.precio}</td>
-              <td>{tour.duracion}</td>
+    <div className="p-6">
+      <div className="flex justify-between items-center mb-5">
+        <h2 className="text-3xl font-bold">Administración de Tours</h2>
+        <button className="bg-blue-700 text-white px-5 py-2 rounded hover:bg-blue-800">
+          Nuevo Tour
+        </button>
+      </div>
+      
+      <div className="overflow-x-auto bg-white rounded-lg shadow-md">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Destino</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Precio</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Duración</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cupos</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {tours.length > 0 ? (
+              tours.map((tour) => (
+                <tr key={tour._id} className="hover:bg-gray-50">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{tour.nombre}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{tour.destino}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${tour.precio}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{tour.duracion}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{tour.cupos}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={5} className="px-6 py-4 text-center text-gray-500">No hay tours registrados</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
