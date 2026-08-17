@@ -1,7 +1,6 @@
 import { Schema, model } from "mongoose";
-import type { IEmpresa } from "../types/Empresa.js";
 
-const EmpresaSchema = new Schema<IEmpresa>({
+const EmpresaSchema = new Schema({
   nombre: { type: String, required: true },
   sector: { type: String, required: true },
   ciudad: { type: String, required: true },
