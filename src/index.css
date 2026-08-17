@@ -1,6 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f5f5f5;
+    background-color: #f3f4f6;
+    /* Fondo gris suave */
+    font-family: 'Inter', sans-serif;
 }

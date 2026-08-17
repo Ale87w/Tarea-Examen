@@ -7,65 +7,74 @@ interface Props {
 }
 
 export default function TablaEmpresas({ empresas, onEditar, onEliminar }: Props) {
-  if (empresas.length === 0) {
-    return <p style={{ marginTop: '20px' }}>No se encontraron empresas.</p>;
-  }
-  if (!Array.isArray(empresas)) {
-  return <p>Cargando empresas o error en la conexión...</p>;
-}
+  const getEstadoColor = (estado: string) => {
+    switch (estado) {
+      case 'Disponible': return 'bg-green-100 text-green-800 border-green-200';
+      case 'Sin vacantes': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+      case 'Inactiva': return 'bg-red-100 text-red-800 border-red-200';
+      default: return 'bg-gray-100 text-gray-800';
+    }
+  };
 
+  const getModalidadIcon = (modalidad: string) => {
+    if (modalidad === 'Remota') return '🌐';
+    if (modalidad === 'Híbrida') return '🔄';
+    return '🏢';
+  };
 
   return (
-    <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '20px' }}>
-      <thead>
-        <tr style={{ backgroundColor: '#f0f0f0', textAlign: 'left' }}>
-          <th style={thStyle}>Empresa</th>
-          <th style={thStyle}>Sector</th>
-          <th style={thStyle}>Ciudad</th>
-          <th style={thStyle}>Vacantes</th>
-          <th style={thStyle}>Modalidad</th>
-          <th style={thStyle}>Estado</th>
-          <th style={thStyle}>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        {empresas.map((e) => (
-          <tr key={e._id} style={{ borderBottom: '1px solid #ddd' }}>
-            <td style={tdStyle}>{e.nombre}</td>
-            <td style={tdStyle}>{e.sector}</td>
-            <td style={tdStyle}>{e.ciudad}</td>
-            <td style={tdStyle}>{e.vacantes}</td>
-            <td style={tdStyle}>{e.modalidad}</td>
-            <td style={tdStyle}>
-              <span style={{ 
-                color: e.estado === 'Disponible' ? 'green' : e.estado === 'Inactiva' ? 'red' : 'orange',
-                fontWeight: 'bold'
-              }}>{e.estado}</span>
-            </td>
-            <td style={tdStyle}>
-              <button onClick={() => onEditar(e)} style={btnSmallStyle}>Editar</button>
-              <button 
-                onClick={() => onEliminar(e._id!)} 
-                style={{...btnSmallStyle, backgroundColor: '#dc3545', marginLeft: '5px'}}
-              >
-                Eliminar
-              </button>
-            </td>
+    <div className="overflow-x-auto">
+      <table className="w-full text-left border-collapse">
+        <thead>
+          <tr className="bg-gray-800 text-white text-sm uppercase tracking-wider">
+            <th className="p-4 font-semibold">Empresa</th>
+            <th className="p-4 font-semibold">Sector</th>
+            <th className="p-4 font-semibold">Ciudad</th>
+            <th className="p-4 font-semibold text-center">Vacantes</th>
+            <th className="p-4 font-semibold">Modalidad</th>
+            <th className="p-4 font-semibold">Estado</th>
+            <th className="p-4 font-semibold text-center">Acciones</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody className="divide-y divide-gray-200">
+          {empresas.map((e) => (
+            <tr key={e._id} className="hover:bg-gray-50 transition duration-150">
+              <td className="p-4 font-medium text-gray-900">{e.nombre}</td>
+              <td className="p-4 text-gray-600">{e.sector}</td>
+              <td className="p-4 text-gray-600">{e.ciudad}</td>
+              <td className="p-4 text-center">
+                <span className={`font-bold ${e.vacantes === 0 ? 'text-red-600' : 'text-gray-700'}`}>
+                  {e.vacantes}
+                </span>
+              </td>
+              <td className="p-4 text-gray-600 flex items-center gap-2">
+                <span>{getModalidadIcon(e.modalidad)}</span> {e.modalidad}
+              </td>
+              <td className="p-4">
+                <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${getEstadoColor(e.estado)}`}>
+                  {e.estado}
+                </span>
+              </td>
+              <td className="p-4 text-center">
+                <div className="flex justify-center gap-2">
+                  <button 
+                    onClick={() => onEditar(e)} 
+                    className="bg-blue-500 hover:bg-blue-600 text-white text-xs font-medium py-1.5 px-3 rounded transition shadow-sm"
+                  >
+                    Editar
+                  </button>
+                  <button 
+                    onClick={() => onEliminar(e._id!)} 
+                    className="bg-red-500 hover:bg-red-600 text-white text-xs font-medium py-1.5 px-3 rounded transition shadow-sm"
+                  >
+                    Eliminar
+                  </button>
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
-}
-
-const thStyle = { padding: '10px', borderBottom: '2px solid #ccc' };
-const tdStyle = { padding: '10px' };
-const btnSmallStyle = { 
-  padding: '4px 8px', 
-  backgroundColor: '#007bff', 
-  color: 'white', 
-  border: 'none', 
-  borderRadius: '4px', 
-  cursor: 'pointer', 
-  fontSize: '12px' 
-};
+} 
