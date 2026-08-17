@@ -1,3 +1,4 @@
+import { ... } from "../controllers/empresas.controller";
 import { Router } from 'express';
 import { 
   obtenerEmpresas, 

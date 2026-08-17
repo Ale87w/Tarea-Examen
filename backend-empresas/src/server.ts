@@ -1,3 +1,7 @@
+// En src/server.ts
+import { conectarDB } from "./config/database"; 
+import empresasRoutes from "./routes/empresas.routes";
+
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
