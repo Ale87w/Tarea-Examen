@@ -1,12 +1,11 @@
-// En src/server.ts
-import { conectarDB } from "./config/database"; 
-import empresasRoutes from "./routes/empresas.routes";
+import dns from 'dns';
+dns.setServers(['8.8.8.8', '1.1.1.1']);
 
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import { conectarDB } from './config/database.js';
-import empresasRoutes from './routes/empresas.routes.js';
+import { conectarDB } from "./config/database"; 
+import empresasRoutes from "./routes/empresas.routes";
 
 dotenv.config();
 

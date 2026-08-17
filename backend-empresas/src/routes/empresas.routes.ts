@@ -1,4 +1,3 @@
-import { ... } from "../controllers/empresas.controller";
 import { Router } from 'express';
 import { 
   obtenerEmpresas, 
@@ -12,7 +11,7 @@ import {
 const router = Router();
 
 router.get('/', obtenerEmpresas);
-router.get('/buscar', buscarEmpresas); // Ruta especial para búsqueda parcial
+router.get('/buscar', buscarEmpresas);
 router.get('/:id', obtenerEmpresa);
 router.post('/', crearEmpresa);
 router.put('/:id', actualizarEmpresa);
