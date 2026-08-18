@@ -1,8 +1,32 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+* {
+    box-sizing: border-box;
+}
+
+html {
+    min-width: 320px;
+    min-height: 100%;
+}
+
 body {
-    background-color: #f3f4f6;
-    /* Fondo gris suave */
-    font-family: 'Inter', sans-serif;
+    margin: 0;
+    min-width: 320px;
+    min-height: 100vh;
+    background-color: #afc4d3;
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color: #242e39;
+}
+
+button,
+input,
+select {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+#root {
+    min-height: 100vh;
 }
